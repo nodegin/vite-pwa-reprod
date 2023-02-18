@@ -1,7 +1,8 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 
-import { VitePWA } from 'vite-plugin-pwa';
+import react from '@vitejs/plugin-react';
+import { VitePWA, defaultInjectManifestVitePlugins } from 'vite-plugin-pwa';
 import viteTsConfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
@@ -21,10 +22,20 @@ export default defineConfig({
     viteTsConfigPaths({
       root: '../../',
     }),
+    react(), // <-- Comment this line and compare the dev behavior
     VitePWA({
       strategies: 'injectManifest',
       srcDir: './src',
       filename: 'sw.ts',
+      injectManifest: {
+        vitePlugins: defaultInjectManifestVitePlugins.concat(
+          'vite-tsconfig-paths'
+        ),
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
     }),
   ],
 });
